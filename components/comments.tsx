@@ -21,7 +21,6 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
     );
 
     const handleReply = (data: ReplyData) => {
-
         if (!user) return
 
         const newComment = {
@@ -43,6 +42,8 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
         setAllComments(p => [...p])
     }
 
+    const handleUpdate = () => {
+    }
 
     useEffect(() => { setUser(currentUser) }, [])
 

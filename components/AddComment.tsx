@@ -27,7 +27,7 @@ const AddComment = ({ to, originalId, handleReply }:
                     <div className="w-[40px] h-[40px] bg-lightgrayishblue rounded-full m-0"></div>}
             </div>
             <div className="w-full ">
-                <textarea id={`replyto-${originalId}`} className="leeading-3 w-full border rounded-lg p-2 px-4  resize-none no-scrollbar overflow-hidden border-grayishblue hover:cursor-pointer" rows={3} defaultValue={to ? `@${to} ` : ""} />
+                <textarea id={`replyto-${originalId}`} className="leading-4 w-full border rounded-lg p-2 px-4  resize-none no-scrollbar overflow-hidden border-grayishblue hover:cursor-pointer" rows={5} defaultValue={to ? `@${to} ` : ""} />
             </div>
             <button
                 onClick={onClick}
