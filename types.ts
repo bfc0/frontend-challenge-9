@@ -12,6 +12,7 @@ type PostComment = {
     createdAt: string,
     score: number,
     user: User,
+    replyingTo?: string,
     replies: Array<PostComment>,
 }
 
