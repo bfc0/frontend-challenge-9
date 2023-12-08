@@ -1,4 +1,5 @@
 "use client"
+import { ActionSchemaType } from "@/lib/validate";
 import React, { useState } from "react";
 
 type DataContextType = {
@@ -8,6 +9,8 @@ type DataContextType = {
     setHandleUpdate: React.Dispatch<React.SetStateAction<(() => void) | null>>,
     handleDelete: (() => void) | null,
     setHandleDelete: React.Dispatch<React.SetStateAction<(() => void) | null>>,
+    executeAction: ((data: ActionSchemaType) => void) | null,
+    setExecuteAction: React.Dispatch<React.SetStateAction<((data: ActionSchemaType) => void) | null>>,
 }
 
 export const DataContext = React.createContext<DataContextType | null>(null)
@@ -16,7 +19,7 @@ export default function DataContextProvider({ children }: { children: React.Reac
     const [user, setUser] = useState<User | null>(null)
     const [handleUpdate, setHandleUpdate] = useState<(() => void) | null>(null)
     const [handleDelete, setHandleDelete] = useState<(() => void) | null>(null)
-
+    const [executeAction, setExecuteAction] = useState<((data: ActionSchemaType) => void) | null>(null)
 
     return (
         <DataContext.Provider value={{
@@ -25,7 +28,9 @@ export default function DataContextProvider({ children }: { children: React.Reac
             handleUpdate,
             setHandleUpdate,
             handleDelete,
-            setHandleDelete
+            setHandleDelete,
+            executeAction,
+            setExecuteAction,
         }}>
             {children}
         </DataContext.Provider>

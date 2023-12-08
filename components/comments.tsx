@@ -6,13 +6,14 @@ import AddComment from "./AddComment"
 import React from "react";
 import Replies from "./replies";
 import { useDataContext } from "@/context/data-context";
-import { findAndDeleteById, findById, findFirstLevelPostByCommentId, findHighestId } from "@/utils";
+import { findAndDeleteById, findById, findFirstLevelPostByCommentId, findHighestId } from "@/lib/utils";
+import { ActionSchema } from "@/lib/validate";
 
 
 
 const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: User, comments: PostComment[] } }) => {
     const [allComments, setAllComments] = useState(comments);
-    const { user, setUser, setHandleUpdate, setHandleDelete } = useDataContext()
+    const { user, setUser, setHandleUpdate, setHandleDelete, setExecuteAction } = useDataContext()
     const [nextId, setNextId] = useState(findHighestId(allComments) + 1)
 
     const renderReplies = (replies: PostComment[]) => (
@@ -36,6 +37,8 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
         if (data.originalId) {
             const origin = findFirstLevelPostByCommentId(data.originalId, allComments)
             if (!origin) throw new Error("Can't find a message to reply to!")
+            if (origin.user?.username)
+                newComment.replyingTo = origin.user.username
             origin.replies.push(newComment)
         } else {
             setAllComments(p => [...p, newComment])
@@ -44,7 +47,7 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
         setNextId(p => p + 1)
     }
 
-    const handleUpdate = (data) => {
+    const handleUpdate = (data: unknown) => {
         // console.log("handling update!, data: ", data)
         if (!data || !data.id || !data.content || !user) return
 
@@ -70,14 +73,46 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
         setAllComments(p => [...p])
     }
 
+    const executeAction = (data: unknown) => {
+        const parsedData = ActionSchema.safeParse(data)
+        if (!parsedData.success) {
+            return
+        }
+        switch (parsedData.data.action) {
+            case "upvote": {
+                const o = findById(parsedData.data.id, allComments)
+                if (!o) throw new Error("Comment was not found")
+                o.score++
+                break
+            }
+            case "downvote": {
+                const o = findById(parsedData.data.id, allComments)
+                if (!o) throw new Error("Comment was not found")
+                o.score <= 0 ? o.score = 0 : o.score--
+                break
+            }
+            case "delete": {
+                const o = findById(parsedData.data.id, allComments)
+                if (!o) throw new Error("Comment was not found")
+                if (!o.user || o.user.username !== user?.username)
+                    throw new Error(`You don't have the rights to delete that comment!: ${o.user.username} ${user?.username}`)
+                findAndDeleteById(parsedData.data.id, allComments)
+                break
+            }
+        }
+        setAllComments(p => [...p])
+
+    }
+
     useEffect(() => {
         setUser(currentUser)
         setHandleUpdate(() => handleUpdate)
         setHandleDelete(() => handleDelete)
+        setExecuteAction(() => executeAction)
     }, [user, allComments])
 
     return (
-        <section className="flex flex-col gap-4 w-full sm:w-[min(90%,800px)] lg:w-[min(60%),800px] border">
+        <section className="flex flex-col gap-4 w-full sm:w-[min(90%,800px)] lg:w-[min(60%),800px] ">
             {allComments.map(comment => (
                 <React.Fragment key={comment.id}>
                     <Comment comment={comment} handleReply={handleReply} />

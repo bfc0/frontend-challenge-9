@@ -30,7 +30,7 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
 
     return (
         <>
-            <div className="bg-white p-6 radius rounded-md  w-full grid grid-cols-4 grid-rows-5 gap-0! md:grid-cols-6 md:grid-cols-[minmax(4em, auto),1fr,1fr,1fr,1fr,1fr] md:grid-rows-[1fr,1fr,1fr,1fr] ">
+            <div className="bg-white p-6 radius rounded-md  w-full grid grid-cols-4 grid-rows-5 gap-0! md:grid-cols-6 md:grid-cols-[minmax(4em, auto),1fr,1fr,1fr,1fr,1fr] md:grid-rows-[1fr,1fr,1fr,1fr] shadow-sm">
                 {/* {score component} */}
                 <Score comment={comment} />
 
@@ -68,10 +68,10 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
                 {/* {main content} */}
                 <div className="text-grayishblue   md:row-start-2 md:col-start-2 md:row-end-4 md:col-span-full row-start-2 row-span-3 col-start-1 col-span-4" >
                     {isEditing ?
-                        <textarea id={`edit-${comment.id}`} className="leading-4 w-full  rounded-lg p-2 px-4  resize-none no-scrollbar overflow-hidden border-grayishblue hover:cursor-pointer" rows={5} defaultValue={comment.content} />
+                        <textarea id={`edit-${comment.id}`} className="leading-4 w-full  rounded-lg p-2 px-4  resize-none no-scrollbar overflow-hidden border-grayishblue hover:cursor-pointer border" rows={5} defaultValue={comment.content} />
                         : <p>
                             {comment.replyingTo &&
-                                <span className="text-grayishblue font-semibold">
+                                <span className="text-moderateblue font-semibold">
                                     @{comment.replyingTo}, </span>}
                             {comment.content}</p>
                     }
