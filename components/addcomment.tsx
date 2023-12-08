@@ -30,7 +30,7 @@ const AddComment = ({ originalId, toggleReplying }:
             </div>
             <button
                 onClick={onClick}
-                className="bg-moderateblue rounded-md py-2 px-4 text-white uppercase font-normal text-sm">
+                className="bg-moderateblue rounded-md py-2 px-4 text-white uppercase font-normal text-sm hover:bg-lightgrayishblue">
                 {!!originalId ? "reply" : "send"}
             </button>
         </div >

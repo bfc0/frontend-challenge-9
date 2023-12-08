@@ -7,7 +7,7 @@ import React from "react";
 import Replies from "./replies";
 import { useDataContext } from "@/context/data-context";
 import { findAndDeleteById, findById, findFirstLevelPostByCommentId, findHighestId } from "@/lib/utils";
-import { ActionSchema } from "@/lib/validate";
+import { ActionSchema, ActionSchemaType, ResponseSchemaType } from "@/lib/validate";
 import toast from "react-hot-toast";
 
 
@@ -25,7 +25,7 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
 
 
 
-    const executeAction = (data: unknown) => {
+    const executeAction = (data: ActionSchemaType): ResponseSchemaType => {
         try {
             const parsedData = ActionSchema.safeParse(data)
             if (!parsedData.success) {
@@ -83,18 +83,16 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
                 }
             }
 
-        } catch (e) {
-            toast.error(e.message)
-            return {
-                ok: false,
-                error: e
+        } catch (e: unknown) {
+            if (!(e instanceof Error)) {
+                return { ok: false, error: "Unknown error" }
             }
+            toast.error(e.message)
+            return { ok: false, error: e.message }
         }
 
         setAllComments(p => [...p])
-        return {
-            ok: true,
-        }
+        return { ok: true, }
     }
 
     useEffect(() => {

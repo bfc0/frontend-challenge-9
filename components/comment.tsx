@@ -19,7 +19,9 @@ const Comment = ({ comment }: { comment: PostComment }) => {
     function clickUpdate() {
         if (executeAction === null) return
         const newContent = (document.querySelector(`#edit-${comment.id}`) as HTMLTextAreaElement).value
-        executeAction({ action: "update", id: comment.id, content: newContent })
+        const result = executeAction({ action: "update", id: comment.id, content: newContent })
+        if (!result.ok) return
+
         setIsEditing(p => !p)
     }
 
@@ -50,17 +52,17 @@ const Comment = ({ comment }: { comment: PostComment }) => {
                         (<div className="justify-self-end flex ml-auto gap-5 align-middle ">
                             <button
                                 onClick={() => setShowModal(true)}
-                                className="flex   items-center gap-2 font-bold text-softred">
+                                className="flex   items-center gap-2 font-bold text-softred hover:text-palered">
                                 <Image src={Delete} alt="" />Delete</button>
                             <button
                                 onClick={() => setIsEditing(p => !p)}
-                                className="flex   items-center gap-2 font-bold text-moderateblue">
+                                className="flex   items-center gap-2 font-bold text-moderateblu hover:text-lightgrayishblue">
                                 <Image src={Edit} alt="" />Edit</button>
                         </div>)
                         :
                         (<button
                             onClick={() => setIsReplying(p => !p)}
-                            className="justify-self-end ml-auto flex   items-center gap-2 font-bold text-moderateblue">
+                            className="justify-self-end ml-auto flex   items-center gap-2 font-bold text-moderateblue hover:text-lightgrayishblue">
                             <Image src={Reply} alt="" />Reply </button>)
                     }
                 </div>
