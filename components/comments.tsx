@@ -77,7 +77,7 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
     }, [user, allComments])
 
     return (
-        <section className="flex flex-col gap-4 xl:w-[min((60%),1000px)]">
+        <section className="flex flex-col gap-4 w-full sm:w-[min(90%,800px)] lg:w-[min(60%),800px] border">
             {allComments.map(comment => (
                 <React.Fragment key={comment.id}>
                     <Comment comment={comment} handleReply={handleReply} />

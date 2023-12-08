@@ -6,6 +6,7 @@ import Delete from '@/public/images/icon-delete.svg'
 import AddComment from "./AddComment"
 import { useDataContext } from "@/context/data-context"
 import Modal from "./modal"
+import Score from "./score"
 
 const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: (data: ReplyData) => void }) => {
     const { user, handleUpdate, handleDelete } = useDataContext()
@@ -29,52 +30,51 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
 
     return (
         <>
-            <div className="bg-white p-6 radius rounded-md flex w-full ">
-                <div className="pr-4 border">
-                    <div className="bg-verylightgray p-2 rounded-lg min-w-[2rem] flex flex-col align-middle">
-                        <div className="text-center">+</div>
-                        <div className="text-center">{comment?.score}</div>
-                        <div className="text-center">-</div>
-                    </div>
-                </div>
-                <div className="w-full border border-y-softred">
-                    <div className="flex py-2 items-center gap-4">
-                        <Image src={comment?.user?.image.png.slice(1)} alt="avatar" width={40} height={40} />
-                        <div className="font-semibold text-darkblue">
-                            {comment.user?.username}
-                            {isMyComment &&
-                                <span className="bg-moderateblue text-white ml-3 px-1">you</span>}
-                        </div>
-                        <div className="text-grayishblue">{comment.createdAt}</div>
-                        {isMyComment ?
-                            (<div className="justify-self-end flex ml-auto gap-5">
-                                <button
-                                    onClick={() => setShowModal(true)}
-                                    className="flex   items-center gap-2 font-bold text-softred">
-                                    <Image src={Delete} alt="" />Delete</button>
-                                <button
-                                    onClick={() => setIsEditing(p => !p)}
-                                    className="flex   items-center gap-2 font-bold text-moderateblue">
-                                    <Image src={Edit} alt="" />Edit</button>
-                            </div>)
-                            :
-                            (<button
-                                onClick={() => setIsReplying(p => !p)}
-                                className="justify-self-end ml-auto flex   items-center gap-2 font-bold text-moderateblue">
-                                <Image src={Reply} alt="" />Reply </button>)
-                        }
-                    </div>
+            <div className="bg-white p-6 radius rounded-md  w-full grid grid-cols-4 grid-rows-5 gap-0! md:grid-cols-6 md:grid-cols-[minmax(4em, auto),1fr,1fr,1fr,1fr,1fr] md:grid-rows-[1fr,1fr,1fr,1fr] ">
+                {/* {score component} */}
+                <Score comment={comment} />
 
-                    <div className="text-grayishblue">
-                        {isEditing ?
-                            <textarea id={`edit-${comment.id}`} className="leading-4 w-full border rounded-lg p-2 px-4  resize-none no-scrollbar overflow-hidden border-grayishblue hover:cursor-pointer" rows={5} defaultValue={comment.content} />
-                            : <p>
-                                {comment.replyingTo &&
-                                    <span className="text-grayishblue font-semibold">
-                                        @{comment.replyingTo}, </span>}
-                                {comment.content}</p>
-                        }
-                    </div>
+                {/* {title} */}
+                <div className="font-semibold text-darkblue flex items-center  gap-2 md:row-start-1 md:col-start-2 md:row-end-1 md:col-span-full
+               row-start-1 col-start-1 col-span-4 
+                " >
+                    <Image src={comment?.user?.image.png.slice(1)} alt="avatar" width={40} height={40} />
+                    {comment.user?.username}
+                    {isMyComment &&
+                        <span className="bg-moderateblue text-white ml-3 px-1">you</span>}
+                    <div className="text-grayishblue">{comment.createdAt}</div>
+                </div>
+
+                {/* {buttons} */}
+                <div className="flex items-center row-start-5 col-start-3 col-span-2  md:row-start-1 md:col-start-5 md:row-end-1 md:col-span-full" >
+                    {isMyComment ?
+                        (<div className="justify-self-end flex ml-auto gap-5 align-middle ">
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="flex   items-center gap-2 font-bold text-softred">
+                                <Image src={Delete} alt="" />Delete</button>
+                            <button
+                                onClick={() => setIsEditing(p => !p)}
+                                className="flex   items-center gap-2 font-bold text-moderateblue">
+                                <Image src={Edit} alt="" />Edit</button>
+                        </div>)
+                        :
+                        (<button
+                            onClick={() => setIsReplying(p => !p)}
+                            className="justify-self-end ml-auto flex   items-center gap-2 font-bold text-moderateblue">
+                            <Image src={Reply} alt="" />Reply </button>)
+                    }
+                </div>
+                {/* {main content} */}
+                <div className="text-grayishblue   md:row-start-2 md:col-start-2 md:row-end-4 md:col-span-full row-start-2 row-span-3 col-start-1 col-span-4" >
+                    {isEditing ?
+                        <textarea id={`edit-${comment.id}`} className="leading-4 w-full  rounded-lg p-2 px-4  resize-none no-scrollbar overflow-hidden border-grayishblue hover:cursor-pointer" rows={5} defaultValue={comment.content} />
+                        : <p>
+                            {comment.replyingTo &&
+                                <span className="text-grayishblue font-semibold">
+                                    @{comment.replyingTo}, </span>}
+                            {comment.content}</p>
+                    }
                     {isEditing &&
                         <div className="flex">
                             <button
