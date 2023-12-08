@@ -39,7 +39,7 @@ const Comment = ({ comment }: { comment: PostComment }) => {
                 {/* {title} */}
                 <div className="font-semibold text-darkblue flex items-center  gap-2 md:row-start-1 md:col-start-2 md:row-end-1 md:col-span-full
                row-start-1 col-start-1 col-span-4 " >
-                    <Image src={comment?.user?.image.png.slice(1)} alt="avatar" width={40} height={40} />
+                    <Image src={comment?.user?.image.png} alt="avatar" width={40} height={40} />
                     {comment.user?.username}
                     {isMyComment &&
                         <span className="bg-moderateblue text-white ml-3 px-1">you</span>}

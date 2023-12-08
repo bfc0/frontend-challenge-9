@@ -22,7 +22,7 @@ const AddComment = ({ originalId, toggleReplying }:
         <div className="bg-white p-6 radius rounded-md flex gap-2 items-start">
             <div className="pr-4">
                 {!!user ?
-                    <Image src={user.image?.png?.slice(1)} alt="avatar" width={40} height={40} /> :
+                    <Image src={user.image?.png} alt="avatar" width={40} height={40} /> :
                     <div className="w-[40px] h-[40px] bg-lightgrayishblue rounded-full m-0"></div>}
             </div>
             <div className="w-full ">
