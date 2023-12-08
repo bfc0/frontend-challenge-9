@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import Reply from '@/public/images/icon-reply.svg'
 import Edit from '@/public/images/icon-edit.svg'
 import Delete from '@/public/images/icon-delete.svg'
-import AddComment from "./AddComment"
+import AddComment from "./addcomment"
 import { useDataContext } from "@/context/data-context"
 import Modal from "./modal"
 import Score from "./score"
 
-const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: (data: ReplyData) => void }) => {
-    const { user, handleUpdate, executeAction } = useDataContext()
+const Comment = ({ comment }: { comment: PostComment }) => {
+    const { user, executeAction } = useDataContext()
     const isMyComment = comment.user && comment.user.username === user?.username
 
     const [isReplying, setIsReplying] = useState(false)
@@ -41,7 +41,7 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
                     {comment.user?.username}
                     {isMyComment &&
                         <span className="bg-moderateblue text-white ml-3 px-1">you</span>}
-                    <div className="text-grayishblue">{comment.createdAt}</div>
+                    <div className="text-grayishblue overflow-hidden">{comment.createdAt}</div>
                 </div>
 
                 {/* {buttons} */}

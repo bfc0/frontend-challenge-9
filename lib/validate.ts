@@ -29,4 +29,17 @@ export const UpdateMessageSchema = z.object({
 
 export const ActionSchema = z.union([UpvoteSchema, DownvoteSchema, DeleteSchema, NewMessageSchema, UpdateMessageSchema])
 
+
+
+export const SuccessResponseSchema = z.object({
+    ok: z.literal(true)
+})
+export const FailureResponseSchema = z.object({
+    ok: z.literal(false),
+    error: z.string(),
+})
+
+export const ResponseSchema = z.union([SuccessResponseSchema, FailureResponseSchema])
+
 export type ActionSchemaType = z.infer<typeof ActionSchema>
+export type ResponseSchemaType = z.infer<typeof ResponseSchema>

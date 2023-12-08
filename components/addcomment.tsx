@@ -1,6 +1,7 @@
 import { useDataContext } from "@/context/data-context"
 import Image from "next/image"
 import React from 'react'
+import toast from "react-hot-toast"
 
 
 const AddComment = ({ originalId, toggleReplying }:
@@ -11,7 +12,8 @@ const AddComment = ({ originalId, toggleReplying }:
         const element = document.querySelector(`#replyto-${originalId}`) as HTMLTextAreaElement
         const content = element.value
         if (!executeAction) return
-        executeAction({ action: "newmessage", originalId, content })
+        const result = executeAction({ action: "newmessage", originalId, content })
+        if (!result.ok) return
         element.value = ""
         toggleReplying && toggleReplying()
     }

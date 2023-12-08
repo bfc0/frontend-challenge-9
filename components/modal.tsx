@@ -1,7 +1,7 @@
 import React from 'react'
 
-const Modal = ({ closeFn, confirmFn }) => {
-    const Backdrop = ({ closeFn }) => (
+const Modal = ({ closeFn, confirmFn }: { closeFn: () => void, confirmFn: () => void }) => {
+    const Backdrop = ({ closeFn }: { closeFn: () => void }) => (
         <div
             className="fixed top-0 left-0 w-full h-full bg-darkblue opacity-50 z-50"
             onClick={closeFn}

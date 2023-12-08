@@ -1,30 +1,24 @@
 "use client"
-import { ActionSchemaType } from "@/lib/validate";
+import { ActionSchemaType, ResponseSchemaType } from "@/lib/validate";
 import React, { useState } from "react";
 
 type DataContextType = {
     user: User | null,
     setUser: React.Dispatch<React.SetStateAction<User | null>>,
-    handleUpdate: (() => void) | null,
-    setHandleUpdate: React.Dispatch<React.SetStateAction<(() => void) | null>>,
-    executeAction: ((data: ActionSchemaType) => void) | null,
-    setExecuteAction: React.Dispatch<React.SetStateAction<((data: ActionSchemaType) => void) | null>>,
+    executeAction: ((data: ActionSchemaType) => ResponseSchemaType) | null,
+    setExecuteAction: React.Dispatch<React.SetStateAction<((data: ActionSchemaType) => ResponseSchemaType) | null>>,
 }
 
 export const DataContext = React.createContext<DataContextType | null>(null)
 
 export default function DataContextProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null)
-    const [handleUpdate, setHandleUpdate] = useState<(() => void) | null>(null)
-    const [handleDelete, setHandleDelete] = useState<(() => void) | null>(null)
-    const [executeAction, setExecuteAction] = useState<((data: ActionSchemaType) => void) | null>(null)
+    const [executeAction, setExecuteAction] = useState<((data: ActionSchemaType) => ResponseSchemaType) | null>(null)
 
     return (
         <DataContext.Provider value={{
             user,
             setUser,
-            handleUpdate,
-            setHandleUpdate,
             executeAction,
             setExecuteAction,
         }}>
