@@ -13,7 +13,7 @@ import { ActionSchema } from "@/lib/validate";
 
 const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: User, comments: PostComment[] } }) => {
     const [allComments, setAllComments] = useState(comments);
-    const { user, setUser, setHandleUpdate, setHandleDelete, setExecuteAction } = useDataContext()
+    const { user, setUser, setHandleUpdate, setExecuteAction } = useDataContext()
     const [nextId, setNextId] = useState(findHighestId(allComments) + 1)
 
     const renderReplies = (replies: PostComment[]) => (
@@ -25,7 +25,7 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
     const handleReply = (data: ReplyData) => {
         if (!user) return
 
-        const newComment = {
+        const newComment: PostComment = {
             id: nextId,
             user: user,
             createdAt: "just now",
@@ -51,26 +51,15 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
         // console.log("handling update!, data: ", data)
         if (!data || !data.id || !data.content || !user) return
 
-        const o = findById(data.id, allComments)
+        const o = findbyid(data.id, allcomments)
         if (!o)
-            throw new Error(`Could not find the comment to update`)
+            throw new error(`could not find the comment to update`)
         if (!o.user || o.user.username !== user?.username)
-            throw new Error(`You don't have the rights to modify that comment!: ${o.user.username} ${user?.username}`)
+            throw new error(`you don't have the rights to modify that comment!: ${o.user.username} ${user?.username}`)
         o.content = data.content
         // console.log(o)
         setAllComments(p => [...p])
 
-    }
-    const handleDelete = (id: number) => {
-        if (!id || !user) return
-        const o = findById(id, allComments)
-        if (!o)
-            throw new Error(`Could not find the comment to delete`)
-        if (!o.user || o.user.username !== user?.username)
-            throw new Error(`You don't have the rights to delete that comment!: ${o.user.username} ${user?.username}`)
-
-        findAndDeleteById(id, allComments)
-        setAllComments(p => [...p])
     }
 
     const executeAction = (data: unknown) => {
@@ -99,6 +88,36 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
                 findAndDeleteById(parsedData.data.id, allComments)
                 break
             }
+            case "newmessage": {
+                const newComment = {
+                    id: nextId,
+                    user: user,
+                    createdAt: "just now",
+                    score: 0,
+                    content: parsedData.data.content,
+                    replies: []
+                } as PostComment
+                if (parsedData.data.originalId) {
+                    const origin = findFirstLevelPostByCommentId(parsedData.data.originalId, allComments)
+                    if (!origin) throw new Error("Can't find a message to reply to!")
+                    if (origin.user?.username)
+                        newComment.replyingTo = origin.user.username
+                    origin.replies.push(newComment)
+                } else {
+                    console.log("else")
+                    setAllComments(p => [...p, newComment])
+                }
+                setNextId(p => p + 1)
+                break;
+            }
+            case "update": {
+                const o = findById(parsedData.data.id, allComments)
+                if (!o)
+                    throw new Error(`could not find the comment to update`)
+                if (!o.user || o.user.username !== user?.username)
+                    throw new Error(`you don't have the rights to modify that comment!: ${o.user.username} ${user?.username}`)
+                o.content = parsedData.data.content
+            }
         }
         setAllComments(p => [...p])
 
@@ -107,7 +126,6 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
     useEffect(() => {
         setUser(currentUser)
         setHandleUpdate(() => handleUpdate)
-        setHandleDelete(() => handleDelete)
         setExecuteAction(() => executeAction)
     }, [user, allComments])
 
@@ -123,7 +141,7 @@ const Comments = ({ data: { currentUser, comments } }: { data: { currentUser: Us
                     }
                 </React.Fragment>
             ))}
-            <AddComment to={null} originalId={null} handleReply={handleReply} />
+            <AddComment originalId={null} />
         </section>
     );
 };

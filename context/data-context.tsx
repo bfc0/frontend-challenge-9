@@ -7,8 +7,6 @@ type DataContextType = {
     setUser: React.Dispatch<React.SetStateAction<User | null>>,
     handleUpdate: (() => void) | null,
     setHandleUpdate: React.Dispatch<React.SetStateAction<(() => void) | null>>,
-    handleDelete: (() => void) | null,
-    setHandleDelete: React.Dispatch<React.SetStateAction<(() => void) | null>>,
     executeAction: ((data: ActionSchemaType) => void) | null,
     setExecuteAction: React.Dispatch<React.SetStateAction<((data: ActionSchemaType) => void) | null>>,
 }
@@ -27,8 +25,6 @@ export default function DataContextProvider({ children }: { children: React.Reac
             setUser,
             handleUpdate,
             setHandleUpdate,
-            handleDelete,
-            setHandleDelete,
             executeAction,
             setExecuteAction,
         }}>

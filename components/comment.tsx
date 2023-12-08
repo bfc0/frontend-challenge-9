@@ -9,7 +9,7 @@ import Modal from "./modal"
 import Score from "./score"
 
 const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: (data: ReplyData) => void }) => {
-    const { user, handleUpdate, handleDelete } = useDataContext()
+    const { user, handleUpdate, executeAction } = useDataContext()
     const isMyComment = comment.user && comment.user.username === user?.username
 
     const [isReplying, setIsReplying] = useState(false)
@@ -17,15 +17,15 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
     const [showModal, setShowModal] = useState(false)
 
     function clickUpdate() {
-        if (handleUpdate === null) return
+        if (executeAction === null) return
         const newContent = (document.querySelector(`#edit-${comment.id}`) as HTMLTextAreaElement).value
-        handleUpdate({ id: comment.id, content: newContent })
+        executeAction({ action: "update", id: comment.id, content: newContent })
         setIsEditing(p => !p)
     }
 
     function confirmDelete() {
-        if (!handleDelete) return
-        handleDelete(comment.id)
+        if (!executeAction) return
+        executeAction({ action: "delete", id: comment.id })
     }
 
     return (
@@ -36,8 +36,7 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
 
                 {/* {title} */}
                 <div className="font-semibold text-darkblue flex items-center  gap-2 md:row-start-1 md:col-start-2 md:row-end-1 md:col-span-full
-               row-start-1 col-start-1 col-span-4 
-                " >
+               row-start-1 col-start-1 col-span-4 " >
                     <Image src={comment?.user?.image.png.slice(1)} alt="avatar" width={40} height={40} />
                     {comment.user?.username}
                     {isMyComment &&
@@ -88,15 +87,7 @@ const Comment = ({ comment, handleReply }: { comment: PostComment, handleReply: 
 
             </div >
             {isReplying &&
-                <AddComment
-                    to={comment.user.username}
-                    originalId={comment.id}
-                    handleReply={
-                        (args) => {
-                            handleReply(args)
-                            setIsReplying(false)
-                        }} />
-            }
+                <AddComment originalId={comment.id} toggleReplying={() => setIsReplying(false)} />}
 
             {showModal && <Modal closeFn={() => setShowModal(false)} confirmFn={() => { confirmDelete(); setShowModal(false) }} />}
         </>

@@ -3,21 +3,17 @@ import Image from "next/image"
 import React from 'react'
 
 
-const AddComment = ({ to, originalId, handleReply }:
-    { to: string | null, originalId: number | null, handleReply: (data: ReplyData) => void }) => {
-    const { user } = useDataContext()
+const AddComment = ({ originalId, toggleReplying }:
+    { originalId: number | null, toggleReplying?: () => void }) => {
+    const { user, executeAction } = useDataContext()
 
     function onClick() {
         const element = document.querySelector(`#replyto-${originalId}`) as HTMLTextAreaElement
         const content = element.value
-        // console.log("content=", content)
-        if (!content) return
-
-        handleReply({
-            originalId: originalId,
-            content: content,
-        })
+        if (!executeAction) return
+        executeAction({ action: "newmessage", originalId, content })
         element.value = ""
+        toggleReplying && toggleReplying()
     }
 
     return (
